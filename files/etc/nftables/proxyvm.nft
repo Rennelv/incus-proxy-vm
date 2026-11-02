@@ -1,0 +1,67 @@
+#!/usr/sbin/nft -f
+
+destroy table ip proxyvm_nat
+destroy table inet proxyvm_guard
+
+table ip proxyvm_nat {
+    set bypass {
+        type ipv4_addr
+        flags interval
+        elements = {
+            0.0.0.0/8,
+            {{BRIDGE_SUBNET}},
+            127.0.0.0/8,
+            169.254.0.0/16,
+            224.0.0.0/4,
+            240.0.0.0/4
+        }
+    }
+
+    chain output {
+        type nat hook output priority dstnat; policy accept;
+
+        meta skuid redsocks return
+        ip daddr @bypass return
+        tcp dport != {{REDIRECT_PORT}} redirect to :{{REDIRECT_PORT}}
+    }
+
+    chain prerouting {
+        type nat hook prerouting priority dstnat; policy accept;
+
+        iifname "{{GUEST_INTERFACE}}" return
+        ip daddr @bypass return
+        tcp dport != {{REDIRECT_PORT}} redirect to :{{REDIRECT_PORT}}
+    }
+}
+
+table inet proxyvm_guard {
+    chain output {
+        type filter hook output priority filter; policy drop;
+
+        oifname "lo" accept
+        ip daddr 127.0.0.1 tcp dport {{REDIRECT_PORT}} accept
+
+        meta nfproto ipv6 drop
+
+        udp dport 53 drop
+
+        ct state established,related accept
+
+        oifname "{{GUEST_INTERFACE}}" udp sport 68 udp dport 67 accept
+
+        ip daddr {{PROXY_HOST}} tcp dport {{PROXY_PORT}} accept
+    }
+
+    chain forward {
+        type filter hook forward priority filter; policy accept;
+
+        meta nfproto ipv6 drop
+        oifname "{{GUEST_INTERFACE}}" drop
+    }
+
+    chain input {
+        type filter hook input priority filter; policy accept;
+
+        iifname "{{GUEST_INTERFACE}}" tcp dport {{REDIRECT_PORT}} drop
+    }
+}

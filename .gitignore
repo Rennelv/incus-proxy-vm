@@ -1,0 +1,15 @@
+config.json
+rendered/*
+!rendered/.gitkeep
+*.log
+*.pem
+*.key
+*.p12
+*.pfx
+id_*
+.env
+.env.*
+__pycache__/
+.pytest_cache/
+*.pyc
+.DS_Store

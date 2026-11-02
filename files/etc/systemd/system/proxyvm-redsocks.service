@@ -1,0 +1,15 @@
+[Unit]
+Description=Network service
+After=network.target
+
+[Service]
+Type=simple
+User=redsocks
+Group=redsocks
+ExecStartPre=/usr/bin/redsocks -t -c /etc/redsocks-ai.conf
+ExecStart=/usr/bin/redsocks -c /etc/redsocks-ai.conf
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

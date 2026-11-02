@@ -1,0 +1,14 @@
+[Unit]
+Description=Network service
+DefaultDependencies=no
+After=local-fs.target
+Before=network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/nft -f /etc/nftables/proxyvm.nft
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

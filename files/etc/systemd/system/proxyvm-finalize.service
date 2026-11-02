@@ -1,0 +1,13 @@
+[Unit]
+Description=Initialization service
+ConditionPathExists=/var/lib/proxyvm/bootstrap.done
+Wants=network-online.target proxyvm-docker-dns.service
+After=network-online.target proxyvm-docker-dns.service docker.service proxyvm-redsocks.service proxyvm-netfilter.service systemd-resolved.service incus-agent.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash /opt/proxyvm/bootstrap/finalize.sh
+TimeoutStartSec=10min
+
+[Install]
+WantedBy=multi-user.target

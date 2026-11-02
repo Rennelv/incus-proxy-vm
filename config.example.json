@@ -1,0 +1,107 @@
+{
+  "incus": {
+    "image": "images:fedora/44/cloud",
+    "profile": "proxy-vm",
+    "bridge": "proxybr0",
+    "bridge_ipv4": "10.77.88.1/24",
+    "acl": "proxy-egress",
+    "storage_pool": "default",
+    "cpu": "4",
+    "memory": "4GiB",
+    "disk": "40GiB",
+    "guest_interface": "enp5s0",
+    "guest_user": "dev"
+  },
+  "proxy": {
+    "host": "10.77.88.1",
+    "port": 10808,
+    "redirect_port": 12345,
+    "protocol": "socks5"
+  },
+  "dns": {
+    "servers": [
+      "9.9.9.9#dns.quad9.net",
+      "149.112.112.112#dns.quad9.net"
+    ],
+    "docker_bridge_ip": "172.17.0.1",
+    "test_domain": "example.org"
+  },
+  "packages": {
+    "network": [
+      "openssh-server",
+      "redsocks",
+      "nftables",
+      "curl",
+      "ca-certificates",
+      "policycoreutils",
+      "policycoreutils-python-utils",
+      "selinux-policy-targeted"
+    ],
+    "containers": [
+      "moby-engine",
+      "docker-compose",
+      "podman",
+      "passt",
+      "buildah",
+      "skopeo",
+      "fuse-overlayfs",
+      "slirp4netns",
+      "jq"
+    ],
+    "development": [
+      "git",
+      "git-lfs",
+      "gcc",
+      "gcc-c++",
+      "make",
+      "cmake",
+      "pkgconf-pkg-config",
+      "python3",
+      "python3-pip",
+      "python3-devel",
+      "nodejs",
+      "npm",
+      "openssl-devel",
+      "libffi-devel",
+      "ripgrep",
+      "fd-find",
+      "fzf",
+      "jq",
+      "tmux",
+      "htop",
+      "unzip",
+      "zip",
+      "tar",
+      "xz",
+      "curl",
+      "wget"
+    ],
+    "browser": [
+      "chromium",
+      "chromedriver",
+      "xorg-x11-server-Xvfb",
+      "xorg-x11-xauth",
+      "fontconfig",
+      "google-noto-sans-fonts"
+    ]
+  },
+  "tools": {
+    "pnpm": true,
+    "bun": true,
+    "uv": true,
+    "claude": true,
+    "codex": true,
+    "opencode": true,
+    "antigravity": true,
+    "playwright": true,
+    "bun_installer": "https://bun.sh/install",
+    "uv_installer": "https://astral.sh/uv/install.sh",
+    "claude_installer": "https://claude.ai/install.sh",
+    "codex_npm_package": "@openai/codex",
+    "opencode_installer": "https://opencode.ai/v2/install",
+    "antigravity_installer": "https://antigravity.google/cli/install.sh",
+    "x11_forwarding": true,
+    "pnpm_npm_package": "pnpm",
+    "playwright_npm_package": "playwright"
+  }
+}
